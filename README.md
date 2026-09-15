@@ -1,15 +1,14 @@
 # collatz coral
 
-Take any number. If it is even, halve it. If it is odd, triple it and add one.
-Repeat. Every number anyone has ever tried ends up at 1. Nobody can prove that
-they all do. This page lets you play with that, and when you draw thousands of
-the paths on top of each other, they grow into something that looks alive.
+so take any number, and if it's even you halve it, if it's odd you triple it and add one, and you just keep doing that. every single number anyone has ever tried ends up at 1, and the wild part is nobody on earth can prove they all do. it's been open since the 1930s and it's basically a meme in math circles cuz it looks like a homework problem and it eats careers.
 
-Live: <https://xevrion.github.io/collatz-coral/>
+this page lets you mess with it, and when you draw thousands of the paths on top of each other they grow into something that genuinely looks alive, like coral or seaweed. that's the whole reason it exists.
 
-## How it works
+live: <https://xevrion.github.io/collatz-coral/>
 
-The rule is the whole thing. Here it is, this is the entire algorithm:
+## how it works
+
+the rule is the entire thing, there's nothing hiding underneath, this is literally the whole algorithm:
 
 ```js
 function collatz(n){
@@ -19,27 +18,17 @@ function collatz(n){
 }
 ```
 
-That is it. There is no trick hiding underneath. The mystery is that a rule this
-dumb produces paths nobody can predict. Start at 27 and it bounces around for
-111 steps and climbs to 9,232 before it finally falls to 1. Start at 26, one
-less, and it is done in 10 steps.
+and that's what makes it so annoying (in a good way). a rule this dumb produces paths nobody can predict. start at 27 and it bounces around for 111 steps and climbs all the way up to 9,232 before it finally gives up and falls to 1. start at 26, literally one less, and it's done in 10 steps. there's no pattern you can see, and that's the mystery.
 
 ### the hailstone plot
 
-Plot the value at each step and you get a jagged line that rises and crashes
-like a hailstone bouncing in a cloud, which is where the name comes from. The
-page draws it on a log scale so the big climbs and the long tails both fit.
+if you plot the value at each step you get this jagged line that shoots up and crashes down over and over, like a hailstone bouncing around inside a cloud before it drops (thats actually where the name comes from). the page draws it on a log scale cuz otherwise the big climbs flatten everything else into a line at the bottom and you can't see the bounces.
 
 ### the champions
 
-Check every number up to some limit and record two things: how many steps it
-takes, and the highest value it touches on the way. The winners are surprising.
-Under 10,000 the longest path belongs to 6171 (261 steps) and the highest climb
-belongs to 9663, which reaches 27,114,424 before coming back down.
+check every number up to some limit and keep track of two things, how many steps it takes and the highest point it touches on the way. the winners are kinda surprising. under 10,000 the longest path is 6171 (261 steps) and the biggest climb is 9663, which goes all the way up to 27,114,424 before coming back down, from a starting number under ten thousand lol.
 
-This scan is fast because of memoization. Once a path lands on a number whose
-step count is already known, the rest is a lookup. Most paths hit a known number
-within a few steps, so checking 10,000 numbers takes tens of milliseconds.
+the scan is fast because of memoization, and this is the one actual cs lesson in here. once a path lands on a number whose step count you already know, the rest is just a lookup, and most paths hit a known number within a few steps, so checking 10,000 numbers takes tens of milliseconds:
 
 ```js
 while(!stepCache.has(n)){ path.push(n); n = n%2===0 ? n/2 : 3*n+1; }
@@ -47,24 +36,18 @@ while(!stepCache.has(n)){ path.push(n); n = n%2===0 ? n/2 : 3*n+1; }
 
 ### the coral
 
-This is the reason the page exists. Reverse each sequence so it starts at 1,
-then walk it: draw a short line, and at every step turn slightly left if the
-number is even, slightly right if it is odd. Odd turns are a bit sharper than
-even ones. Draw thousands of these paths from the same starting point, faint
-and overlapping, and a branching organic shape appears. Nobody designed it. It
-falls out of the parity pattern of the sequences.
+ok this is the fun part. you reverse each sequence so it starts at 1, then you walk it like a turtle: draw a short line, and at every step turn a little left if the number is even and a little right if it's odd (odd turns are a bit sharper). do that for thousands of numbers from the same starting point, faint and overlapping, and a branching organic shape just appears. nobody designed it, it falls straight out of the even/odd pattern of the sequences:
 
 ```js
 a += seq[i]%2===0 ? evenTurn : oddTurn;
 x+=Math.cos(a)*stepLen; y+=Math.sin(a)*stepLen;
 ```
 
-The angle sliders change the look completely. Small angles give tight seaweed,
-big angles give wild coral.
+play with the angle sliders, they change the look completely. small angles give you tight seaweed, big ones give you wild spiky coral.
 
-## Usage
+## usage
 
-Open `index.html` in a browser. No server, no build, no dependencies.
+just open `index.html` in a browser. no server, no build, no dependencies, nothing to install.
 
 ```sh
 # just open it
@@ -74,14 +57,13 @@ xdg-open index.html
 python3 -m http.server 8000
 ```
 
-Type a number and hit trace. Set a limit and hit scan. Move the sliders and hit
-grow coral. Save png downloads the coral.
+type a number and hit trace, set a limit and hit scan, drag the sliders and hit grow coral. save png downloads the coral so you can use it as a wallpaper or whatever.
 
-## Limits
+## limits
 
 | thing | reality |
 |---|---|
-| numbers above 2^53 | JS numbers lose precision, results become wrong. Use BigInt if you want to go huge. |
-| scan of 1,000,000+ | works, but the peak search is not memoized and takes a few seconds |
-| the conjecture | this page verifies numbers, it proves nothing. Nobody has. |
-| the coral | it is a drawing rule, not a mathematical object. Pretty, not deep. |
+| numbers above 2^53 | js numbers lose precision and the results become lies. use BigInt if you wanna go huge |
+| scanning 1,000,000+ | works, but the peak search isn't memoized so it takes a few seconds |
+| the conjecture itself | this page checks numbers, it proves nothing. nobody has |
+| the coral | it's a drawing rule, not a real mathematical object. pretty, not deep |
