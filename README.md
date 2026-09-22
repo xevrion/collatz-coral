@@ -4,6 +4,8 @@ so take any number, and if it's even you halve it, if it's odd you triple it and
 
 this page lets you mess with it, and when you draw thousands of the paths on top of each other they grow into something that genuinely looks alive, like coral or seaweed. that's the whole reason it exists.
 
+since the thing that comes out looks like algae, the page is built as one of anna atkins' cyanotypes. she made *photographs of british algae* in 1843, laying seaweed on light sensitive paper and letting the sun print around it, and it was the first book ever illustrated with photographs. so you get prussian blue paper, the specimen in white where it blocked the light, a latin binomial, and plates numbered I, II, III. the numbers are written into the specimen label instead of sitting in a stats bar.
+
 live: <https://xevrion.github.io/collatz-coral/>
 
 ## how it works
@@ -57,7 +59,13 @@ xdg-open index.html
 python3 -m http.server 8000
 ```
 
-type a number and hit trace, set a limit and hit scan, drag the sliders and hit grow coral. save png downloads the coral so you can use it as a wallpaper or whatever.
+three plates, switch between them with the roman numerals at the bottom right:
+
+- **I** the coral. drag *specimens* for how many numbers to print and *turn* for the angle. save the print downloads it, blue and all.
+- **II** one specimen. type a number, or hit take another for a random one.
+- **III** the scattering. every number up to your limit, placed by how many steps it needs.
+
+each plate deep links, so `#coral`, `#one` and `#scan` open straight to one.
 
 ## limits
 
