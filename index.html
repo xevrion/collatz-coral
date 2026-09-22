@@ -8,7 +8,8 @@
   :root{--bg:#1e1e2e;--panel:#181825;--line:#313244;--text:#cdd6f4;--dim:#a6adc8;--muted:#6c7086;
     --mauve:#cba6f7;--blue:#89b4fa;--green:#a6e3a1;--peach:#fab387;--teal:#94e2d5}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:14px;line-height:1.5}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;font-size:14px;line-height:1.5;
+    font-variant-ligatures:none;-webkit-font-variant-ligatures:none}
   header{padding:18px 20px 6px;max-width:1100px;margin:0 auto}
   h1{margin:0;font-size:20px;color:var(--mauve)}
   header p{margin:6px 0 0;color:var(--dim);max-width:70ch}
@@ -38,15 +39,6 @@
   .stat .v{color:var(--teal);font-size:18px;font-weight:700}
   canvas{width:100%;display:block;background:#11111b;border-radius:8px;border:1px solid var(--line)}
   .hint{color:var(--muted);font-size:12px;margin-top:6px}
-  .why{color:var(--dim);font-size:13px;margin-top:10px;line-height:1.65;border-top:1px dashed var(--line);padding-top:10px}
-  .why b{color:var(--text)}
-  .explain{color:var(--dim);line-height:1.7}
-  .explain h3{color:var(--teal);font-size:14px;margin:18px 0 6px}
-  .explain h3:first-child{margin-top:0}
-  .explain p{margin:0 0 10px}
-  .explain b{color:var(--text)}
-  .explain pre{background:#11111b;border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:var(--green)}
-  .explain code{color:var(--peach)}
   .champ{color:var(--dim);font-size:12px;margin-top:8px}
   .champ b{color:var(--peach)}
   a{color:var(--blue)}
@@ -55,15 +47,9 @@
 <body>
 <header>
   <h1>collatz coral</h1>
-  <p>take a number. even? halve it. odd? triple it and add one. repeat. every number ever tried ends at 1, and nobody can prove they all do. draw the paths and something organic appears.</p>
+  <p>even? halve it. odd? triple it and add one. repeat until 1, then draw every path.</p>
 </header>
 <main>
-  <div class="panel explain">
-    <h3>wait, what is this</h3>
-    <p>so there's this math problem from the 1930s called the <b>collatz conjecture</b>, and it's famous cuz it looks like a homework question and nobody can solve it. the rule is stupidly simple: pick any positive number. if it's even, halve it. if it's odd, multiply by 3 and add 1. now do it again to whatever you got. and again. and again.</p>
-    <p>every single number anyone has ever tried (and people have checked past 2<sup>68</sup>, that's a number with 20 digits) eventually collapses down to 1. every one. but nobody can <b>prove</b> that ALL numbers do. that's the whole conjecture, and it's been open for like 90 years. a guy named paul erdos said "mathematics may not be ready for such problems" lol.</p>
-    <p>this page lets you play with it three ways: trace one number and watch it bounce, scan thousands of numbers to find the weird ones, and draw all the paths at once to grow a coral. scroll down to the bottom to see how each part is actually built, it's tiny.</p>
-  </div>
   <div class="row">
     <div class="panel">
       <h2>one number</h2>
@@ -80,7 +66,6 @@
         </div>
         <canvas id="one" height="220"></canvas>
         <div class="hint">the hailstone plot: value vs step. it rises, falls, rises, then collapses to 1.</div>
-        <div class="why"><b>what you're seeing:</b> the full chain of numbers from your start down to 1, then a graph of that chain. <b>steps to 1</b> is how many hops it took. <b>peak</b> is the highest number it touched on the way (27 climbs to 9,232 before falling, from a start of 27!). the graph is on a log scale so the big climbs and the tiny bounces both fit. try 27, then try 26. one less, and it's over in 10 steps. there's no pattern you can see, that's the mystery.</div>
       </div>
     </div>
     <div class="panel">
@@ -98,7 +83,6 @@
         <div class="champ" id="champ"></div>
         <canvas id="scatter" height="220"></canvas>
         <div class="hint">steps-to-1 for every number. looks random. it is not. those bands are real structure.</div>
-        <div class="why"><b>what you're seeing:</b> we ran the rule on EVERY number from 1 up to your limit and recorded two things for each: how many steps it took, and the highest it climbed. the two winners are shown above. the dot cloud is every number (x axis) vs its step count (y axis). it looks like noise but look closer, there are diagonal bands, cuz numbers that share a path share a step count. under 10,000 the longest path is 6171 (261 steps) and the biggest climb is 9663, which goes past 27 million before coming home. from under ten thousand. the scan is fast cuz of a trick called memoization, explained at the bottom.</div>
       </div>
     </div>
   </div>
@@ -114,38 +98,8 @@
         <button id="save" class="ghost">save png</button>
       </div>
       <canvas id="coral" height="560"></canvas>
-      <div class="hint">every number's path is drawn backwards from 1, turning left on even and right on odd. thousands of them together grow this. this is the plot from the famous numberphile video, built from nothing.</div>
-      <div class="why"><b>what you're seeing:</b> this is the fun one. take each number's path, flip it around so it starts at 1, then walk it like a turtle: draw a short line, and at every step turn a little left if the number is even and a little right if it's odd. thousands of paths all start from the same root point at the bottom left, drawn faint and overlapping, and this branching shape just grows out of that. <b>nobody designed it.</b> it falls straight out of the even/odd pattern of the sequences. the thick trunk near the root is where thousands of paths share the same last few steps (everything ends ...4, 2, 1). the branches are where they split apart. drag the angle slider, small angles give you seaweed, big angles give you wild coral. this is a drawing rule not a math object, but it's real structure being made visible.</div>
+      <div class="hint">each path drawn backwards from 1, turning left on even and right on odd.</div>
     </div>
-  </div>
-  <div class="panel explain">
-    <h3>how it's actually built (the whole thing is tiny)</h3>
-    <p>the rule is the entire algorithm. this is it, six lines, no trick underneath:</p>
-<pre>function collatz(n){
-  const seq=[n];
-  while(n!==1){ n = n%2===0 ? n/2 : 3*n+1; seq.push(n); }
-  return seq;
-}</pre>
-    <p>that's what makes the problem so annoying (in a good way). a rule this dumb produces paths nobody can predict.</p>
-    <h3>the memoization trick (why the scan is fast)</h3>
-    <p>scanning 10,000 numbers naively means walking 10,000 full paths, and some are hundreds of steps. but here's the thing: once a path lands on a number we've <b>already solved</b>, we can stop, cuz the rest is just a lookup. most paths hit a known number within a few steps. so we cache every number we ever solve:</p>
-<pre>const stepCache=new Map([[1,0]]);
-function stepsTo1(n){
-  const path=[];
-  // walk until we hit something we already know
-  while(!stepCache.has(n)){ path.push(n); n = n%2===0 ? n/2 : 3*n+1; }
-  // then walk BACK up the path we just took, filling in answers
-  let s=stepCache.get(n);
-  for(let i=path.length-1;i>=0;i--){ s++; stepCache.set(path[i],s); }
-  return stepCache.get(path[0]);
-}</pre>
-    <p>with this, 10,000 numbers scan in about 10 milliseconds and a million in under a second. fun fact i didn't expect: scanning up to 10,000 caches over 21,000 numbers, more than double, cuz the paths wander way above the limit before coming down and every number they touch gets remembered.</p>
-    <h3>the coral (turtle drawing)</h3>
-    <p>reverse each sequence so it starts at 1, then at every step nudge the heading left for even and right for odd, and draw a short line in the new direction. odd turns are a bit sharper than even ones, otherwise you just get a boring fan. that asymmetry is the entire secret of the shape:</p>
-<pre>a += seq[i]%2===0 ? evenTurn : oddTurn;
-x += Math.cos(a)*stepLen;
-y += Math.sin(a)*stepLen;</pre>
-    <p>everything on this page is one html file with no libraries, no build step, and nothing to install. the source is on <a href="https://github.com/xevrion/collatz-coral">github</a>, and there's a notes.md in the repo with the bugs i hit and the numbers i measured while making it.</p>
   </div>
 </main>
 <script>
