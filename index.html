@@ -79,7 +79,7 @@
     padding:0 clamp(20px,4vw,52px) clamp(20px,3vw,30px);
     color:var(--faint);font-size:15px;
   }
-  .dial label{display:flex;gap:10px;align-items:center;white-space:nowrap}
+  .dial label{display:flex;gap:10px;align-items:center;white-space:nowrap;min-width:0}
   .dial .v{color:var(--print);font-variant-numeric:tabular-nums;min-width:3.4em}
   .dial input[type=range]{
     -webkit-appearance:none;appearance:none;width:clamp(90px,13vw,170px);height:1px;
@@ -118,6 +118,10 @@
     .plates{justify-self:start}
     .dial .rule{display:none}
     .cite{white-space:normal}
+    .dial{gap:12px 16px}
+    .dial label{white-space:normal;flex-wrap:wrap}
+    .dial input[type=range]{width:clamp(70px,34vw,150px)}
+    .dial .v{min-width:0}
   }
   @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms !important}}
 </style>
